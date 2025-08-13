@@ -3,6 +3,7 @@ const ejs = require('ejs');
 const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const axios = require('axios'); // ✅ Import axios
 
 const app = express();
 
@@ -21,30 +22,36 @@ app.get('/editor', (req, res) => {
 });
 
 // Route for preview with data
-app.get('/preview/:template', (req, res) => {
+app.get('/preview/:template/:registrationNo', async (req, res) => {
+    const { template, registrationNo } = req.params;
+
     try {
-        const template = req.params.template;
-        const data = req.query.data ? JSON.parse(req.query.data) : {};
-        
-        // Validate template exists
+        // ✅ Fetch data from API
+        const { data: apiData } = await axios.get(
+            `http://localhost:3000/api/profile/get/${registrationNo}`
+        );
+
+        // ✅ Validate template exists
         const templatePath = path.join(__dirname, 'views', 'templates', `${template}.ejs`);
         if (!fs.existsSync(templatePath)) {
             return res.status(404).send('Template not found');
         }
 
+        // ✅ Merge API data into template variables
         res.render(`templates/${template}`, {
-            portfolio: data.basicInfo || {},
-            about: data.about || '',
-            experiences: data.experiences || [],
-            education: data.education || [],
-            skills: data.skills || [],
-            styles: data.styles || {}
+            portfolio: apiData.basicInfo || {},
+            about: apiData.about || '',
+            experiences: apiData.experiences || [],
+            education: apiData.education || [],
+            skills: apiData.skills || [],
+            styles: apiData.styles || {}
         });
+
     } catch (err) {
-        console.error('Preview error:', err);
+        console.error('Preview error:', err.message);
         res.status(500).send('Error rendering template');
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = 3001;
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
