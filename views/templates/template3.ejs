@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= portfolio.name %> | Professional Portfolio</title>
+    <style>
+        body {
+            font-family: '<%= styles.fontFamily %>', sans-serif;
+            font-size: <%= styles.fontSize %>;
+            color: <%= styles.textColor %>;
+            background-color: <%= styles.backgroundColor %>;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: <%= styles.headingColor %>;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: <%= styles.accentColor %>;
+            margin-bottom: 1.5rem;
+        }
+        .divider {
+            height: 1px;
+            background: #eee;
+            margin: 2rem 0;
+        }
+        section {
+            margin-bottom: 2.5rem;
+        }
+        h2 {
+            font-size: 1.4rem;
+            color: <%= styles.headingColor %>;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .experience-item {
+            margin-bottom: 1.5rem;
+        }
+        .experience-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        .date {
+            font-style: italic;
+            color: #777;
+            margin-bottom: 0.5rem;
+        }
+        .skills-list {
+            columns: 2;
+        }
+        @media (max-width: 600px) {
+            .skills-list { columns: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><%= portfolio.name %></h1>
+            <p class="subtitle"><%= portfolio.title %></p>
+            <p><%= portfolio.email %> | <%= portfolio.phone %> | <%= portfolio.location %></p>
+            <% if (portfolio.website) { %>
+                <p><a href="<%= portfolio.website %>" style="color: <%= styles.accentColor %>;"><%= portfolio.website %></a></p>
+            <% } %>
+        </header>
+
+        <div class="divider"></div>
+
+        <% if (portfolio.about) { %>
+            <section>
+                <h2>Profile</h2>
+                <p><%= portfolio.about %></p>
+            </section>
+            <div class="divider"></div>
+        <% } %>
+
+        <% if (portfolio.experience && portfolio.experience.length > 0) { %>
+            <section>
+                <h2>Professional Experience</h2>
+                <% portfolio.experience.forEach(exp => { %>
+                    <div class="experience-item">
+                        <h3><%= exp.position %></h3>
+                        <p class="date"><%= exp.company %> | <%= exp.startDate %> — <%= exp.endDate || 'Present' %></p>
+                        <% if (exp.description) { %>
+                            <p><%= exp.description %></p>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </section>
+            <div class="divider"></div>
+        <% } %>
+
+        <% if (portfolio.skills && portfolio.skills.length > 0) { %>
+            <section>
+                <h2>Skills</h2>
+                <ul class="skills-list">
+                    <% portfolio.skills.forEach(skill => { %>
+                        <li><%= skill %></li>
+                    <% }); %>
+                </ul>
+            </section>
+        <% } %>
+    </div>
+</body>
+</html>

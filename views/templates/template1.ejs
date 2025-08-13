@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= portfolio.name %> - Portfolio</title>
+    <style>
+        :root {
+            --primary: <%= styles.accentColor %>;
+            --secondary: #1d1d1f;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --text: <%= styles.textColor %>;
+            --heading: <%= styles.headingColor %>;
+        }
+
+        body {
+            font-family: '<%= styles.fontFamily %>', sans-serif;
+            font-size: <%= styles.fontSize %>;
+            color: var(--text);
+            background-color: <%= styles.backgroundColor %>;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header / Hero */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 4rem 2rem;
+            background: linear-gradient(120deg, var(--bg-light), #e9ecef);
+        }
+        .hero img {
+            max-width: 320px;
+            height: auto;
+            border-radius: 16px;
+            margin-right: 3rem;
+            box-shadow: 0px 8px 30px rgba(0,0,0,0.15);
+            animation: fadeInLeft 1s ease-in-out;
+        }
+        .hero-content {
+            max-width: 600px;
+            animation: fadeInRight 1s ease-in-out;
+        }
+        .hero-content h1 {
+            font-size: 2.5rem;
+            color: var(--heading);
+            margin: 0;
+        }
+        .hero-content h2 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: bold;
+            margin: 0.5rem 0 1rem;
+        }
+        .hero-content p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Buttons */
+        .btn-group {
+            margin-top: 1.5rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.7rem 1.4rem;
+            margin: 0.3rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: darkblue;
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            border: 2px solid var(--primary);
+            background-color: transparent;
+            color: var(--primary);
+        }
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+        section {
+            margin-bottom: 4rem;
+        }
+        h2 {
+            font-size: 2rem;
+            color: var(--heading);
+            border-bottom: 3px solid var(--primary);
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Cards (Experience, Education, Projects) */
+        .card {
+            background: var(--bg-white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0px 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 25px rgba(0,0,0,0.12);
+        }
+        .card h3 {
+            margin-bottom: 0.3rem;
+            color: var(--heading);
+        }
+        .date {
+            font-style: italic;
+            color: #6c757d;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        /* Skills */
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .skill {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+        .skill:hover {
+            background-color: darkblue;
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero img {
+                margin: 0 0 1.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="<%= portfolio.image %>" alt="<%= portfolio.name %>">
+        <div class="hero-content">
+            <h1>Hello, I'm <%= portfolio.name %></h1>
+            <h2><%= portfolio.title %></h2>
+            <p><%= portfolio.about %></p>
+            <div class="btn-group">
+                <a href="#projects" class="btn btn-primary">View Projects</a>
+                <a href="mailto:<%= portfolio.email %>" class="btn btn-outline">Contact Me</a>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <!-- About -->
+        <section id="about">
+            <h2>About Me</h2>
+            <p><%= portfolio.about %></p>
+        </section>
+        <% if (portfolio.experience && portfolio.experience.length > 0) { %>
+            <section id="experience">
+                <h2>Work Experience</h2>
+                <% portfolio.experience.forEach(exp => { %>
+                    <div class="card">
+                        <h3><%= exp.position %> at <%= exp.company %></h3>
+                        <span class="date"><%= exp.startDate %> - <%= exp.endDate || 'Present' %></span>
+                        <% if (exp.description) { %>
+                            <p><%= exp.description %></p>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </section>
+        <% } %>
+        <% if (portfolio.education && portfolio.education.length > 0) { %>
+            <section id="education">
+                <h2>Education</h2>
+                <% portfolio.education.forEach(edu => { %>
+                    <div class="card">
+                        <h3><%= edu.degree %> - <%= edu.institution %></h3>
+                        <span class="date"><%= edu.startDate %> - <%= edu.endDate || 'Present' %></span>
+                    </div>
+                <% }); %>
+            </section>
+        <% } %>
+        <% if (portfolio.skills && portfolio.skills.length > 0) { %>
+            <section id="skills">
+                <h2>Skills</h2>
+                <div class="skills-list">
+                    <% portfolio.skills.forEach(skill => { %>
+                        <div class="skill"><%= skill %></div>
+                    <% }); %>
+                </div>
+            </section>
+        <% } %>
+        <% if (portfolio.projects && portfolio.projects.length > 0) { %>
+            <section id="projects">
+                <h2>Projects</h2>
+                <% portfolio.projects.forEach(proj => { %>
+                    <div class="card">
+                        <h3><%= proj.name %></h3>
+                        <% if (proj.description) { %>
+                            <p><%= proj.description %></p>
+                        <% } %>
+                        <% if (proj.link) { %>
+                            <p><a href="<%= proj.link %>" target="_blank">🔗 View Project</a></p>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </section>
+        <% } %>
+        <section id="contact">
+            <h2>Contact</h2>
+            <p>📧 Email: <a href="mailto:<%= portfolio.email %>"><%= portfolio.email %></a></p>
+            <p>📞 Phone: <%= portfolio.phone %></p>
+            <p>📍 Location: <%= portfolio.location %></p>
+            <% if (portfolio.website) { %>
+                <p>🌐 Website: <a href="<%= portfolio.website %>" target="_blank"><%= portfolio.website %></a></p>
+            <% } %>
+        </section>
+    </div>
+
+</body>
+</html>

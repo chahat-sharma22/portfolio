@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= portfolio.name %> - Portfolio</title>
+    <style>
+        body {
+            background-color: <%= portfolio.styles.bgColor %>;
+            font-family: '<%= portfolio.styles.headingFont %>', sans-serif;
+            color: #555;
+            padding: 20px;
+        }
+        header {
+            border-bottom: 2px solid <%= portfolio.styles.headingColor %>;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: <%= portfolio.styles.headingColor %>;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><%= portfolio.name %></h1>
+        <p><%= portfolio.title %></p>
+    </header>
+
+    <section>
+        <h2>Skills</h2>
+        <p><%= portfolio.skills.join(", ") %></p>
+    </section>
+
+    <section>
+        <h2>Experience</h2>
+        <% portfolio.experience.forEach(exp => { %>
+            <p><strong><%= exp.role %></strong> - <%= exp.company %> (<%= exp.years %>)</p>
+        <% }); %>
+    </section>
+</body>
+</html>

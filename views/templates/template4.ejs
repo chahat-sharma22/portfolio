@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= portfolio.name %> | Portfolio</title>
+    <style>
+        :root {
+            --accent: <%= styles.accentColor %>;
+            --text: <%= styles.textColor %>;
+            --bg: #121212;
+            --card-bg: #1E1E1E;
+            --heading: #FFFFFF;
+        }
+        body {
+            font-family: '<%= styles.fontFamily %>', sans-serif;
+            font-size: <%= styles.fontSize %>;
+            color: var(--text);
+            background-color: var(--bg);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #333;
+        }
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(90deg, var(--accent), #FF6B6B);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1.3rem;
+            color: #AAAAAA;
+            margin-bottom: 1.5rem;
+        }
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .contact-links a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        .contact-links a:hover {
+            opacity: 0.8;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        h2 {
+            font-size: 1.8rem;
+            color: var(--heading);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+        }
+        .experience-item {
+            margin-bottom: 1.8rem;
+        }
+        .experience-item h3 {
+            font-size: 1.2rem;
+            color: #FFF;
+            margin-bottom: 0.3rem;
+        }
+        .date {
+            color: #777;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .skill {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><%= portfolio.name %></h1>
+            <p class="subtitle"><%= portfolio.title %></p>
+            <div class="contact-links">
+                <% if (portfolio.email) { %>
+                    <a href="mailto:<%= portfolio.email %>"><%= portfolio.email %></a>
+                <% } %>
+                <% if (portfolio.phone) { %>
+                    <a href="tel:<%= portfolio.phone %>"><%= portfolio.phone %></a>
+                <% } %>
+                <% if (portfolio.website) { %>
+                    <a href="<%= portfolio.website %>" target="_blank">Website</a>
+                <% } %>
+            </div>
+        </header>
+
+        <div class="grid">
+            <% if (portfolio.about) { %>
+                <div class="card">
+                    <h2>About</h2>
+                    <p><%= portfolio.about %></p>
+                </div>
+            <% } %>
+
+            <% if (portfolio.experience && portfolio.experience.length > 0) { %>
+                <div class="card">
+                    <h2>Experience</h2>
+                    <% portfolio.experience.forEach(exp => { %>
+                        <div class="experience-item">
+                            <h3><%= exp.position %></h3>
+                            <p class="date"><%= exp.company %> • <%= exp.startDate %> - <%= exp.endDate || 'Present' %></p>
+                            <% if (exp.description) { %>
+                                <p><%= exp.description %></p>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
+
+            <% if (portfolio.education && portfolio.education.length > 0) { %>
+                <div class="card">
+                    <h2>Education</h2>
+                    <% portfolio.education.forEach(edu => { %>
+                        <div class="experience-item">
+                            <h3><%= edu.degree %></h3>
+                            <p class="date"><%= edu.institution %> • <%= edu.startDate %> - <%= edu.endDate %></p>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
+
+            <% if (portfolio.skills && portfolio.skills.length > 0) { %>
+                <div class="card">
+                    <h2>Skills</h2>
+                    <div class="skills-container">
+                        <% portfolio.skills.forEach(skill => { %>
+                            <div class="skill"><%= skill %></div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

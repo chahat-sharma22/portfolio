@@ -1,0 +1,18 @@
+{
+  "name": "portfolio-system",
+  "version": "1.0.0",
+  "description": "Dynamic Portfolio Template System",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
