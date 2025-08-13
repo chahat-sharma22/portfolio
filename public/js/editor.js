@@ -1,34 +1,35 @@
-const previewFrame = document.getElementById('previewFrame');
-const templateSelect = document.getElementById('templateSelect');
-let currentTemplate = templateSelect.value;
+document.addEventListener("DOMContentLoaded", () => {
+    const previewFrame = document.getElementById("previewFrame");
+    const templateSelect = document.getElementById("template");
 
-document.getElementById('saveBtn').addEventListener('click', () => {
-    const updatedData = {
-        name: document.getElementById('name').value,
-        title: document.getElementById('title').value,
-        skills: document.getElementById('skills').value.split(',').map(s => s.trim()),
-        experience: JSON.parse(document.getElementById('experience').value),
-        styles: {
-            headingFont: document.getElementById('headingFont').value,
-            headingColor: document.getElementById('headingColor').value,
-            bgColor: document.getElementById('bgColor').value
-        }
-    };
+    const nameInput = document.getElementById("name");
+    const skillsInput = document.getElementById("skills");
+    const experienceInput = document.getElementById("experience");
+    const headingColorInput = document.getElementById("headingColor");
+    const fontFamilyInput = document.getElementById("fontFamily");
 
-    fetch('/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData)
-    }).then(() => {
-        previewFrame.src = `/preview/${currentTemplate}?t=${Date.now()}`;
-    });
-});
+    // Fetch API data and populate form
+    fetch(`http://localhost:3000/api/profile/get/${REGISTRATION_NO}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log("Fetched API data (frontend):", data);
 
-templateSelect.addEventListener('change', () => {
-    currentTemplate = templateSelect.value;
-    previewFrame.src = `/preview/${currentTemplate}?t=${Date.now()}`;
-});
+            nameInput.value = data.studentProfile?.name || "";
+            skillsInput.value = Array.isArray(data.skills) ? data.skills.join(", ") : data.skills || "";
+            experienceInput.value = data.experiences?.[0]?.description || "";
+            headingColorInput.value = "#000000"; // No color in API, default black
+            fontFamilyInput.value = "Arial"; // No font in API, default Arial
 
-document.getElementById('downloadBtn').addEventListener('click', () => {
-    window.location.href = `/download/${currentTemplate}`;
+            updatePreview();
+        })
+        .catch(err => console.error("Error fetching data:", err));
+
+    // Update preview iframe
+    function updatePreview() {
+        const selectedTemplate = templateSelect.value;
+        previewFrame.src = `/preview/${selectedTemplate}/${REGISTRATION_NO}`;
+    }
+
+    // Change preview when template changes
+    templateSelect.addEventListener("change", updatePreview);
 });

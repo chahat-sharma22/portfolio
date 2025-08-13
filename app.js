@@ -3,7 +3,7 @@ const ejs = require('ejs');
 const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const axios = require('axios'); // ✅ Import axios
+const axios = require('axios');
 
 const app = express();
 
@@ -18,37 +18,51 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => res.redirect('/editor'));
 
 app.get('/editor', (req, res) => {
-    res.render('editor');
+    res.render('editor', { registrationNo: '4001' }); // Pass registrationNo to editor
 });
 
-// Route for preview with data
+// Preview route (server-side API fetch)
 app.get('/preview/:template/:registrationNo', async (req, res) => {
     const { template, registrationNo } = req.params;
 
     try {
-        // ✅ Fetch data from API
+        // Fetch from API
         const { data: apiData } = await axios.get(
             `http://localhost:3000/api/profile/get/${registrationNo}`
         );
+        console.log("Fetched API data:", apiData);
 
-        // ✅ Validate template exists
+        // Check template exists
         const templatePath = path.join(__dirname, 'views', 'templates', `${template}.ejs`);
         if (!fs.existsSync(templatePath)) {
             return res.status(404).send('Template not found');
         }
 
-        // ✅ Merge API data into template variables
-        res.render(`templates/${template}`, {
-            portfolio: apiData.basicInfo || {},
-            about: apiData.about || '',
-            experiences: apiData.experiences || [],
-            education: apiData.education || [],
+        // Map API fields to portfolio object
+        let portfolio = {
+            name: apiData.studentProfile.name,
+            email: apiData.studentProfile.email,
+            phone: apiData.studentProfile.phone,
+            field: apiData.studentProfile.field,
+            batchYear: apiData.studentProfile.batchYear,
+            profilePic: apiData.studentProfile.profilePic,
+            address: apiData.studentProfile.address,
             skills: apiData.skills || [],
-            styles: apiData.styles || {}
-        });
+            education: apiData.education || [],
+            projects: apiData.projects || [],
+            experiences: apiData.experiences || [],
+            volunteering: apiData.volunteering || []
+        };
+
+        // Normalize skills into array
+        if (typeof portfolio.skills === 'string') {
+            portfolio.skills = portfolio.skills.split(',').map(s => s.trim());
+        }
+
+        res.render(`templates/${template}`, { portfolio });
 
     } catch (err) {
-        console.error('Preview error:', err.message);
+        console.error('Preview error:', err);
         res.status(500).send('Error rendering template');
     }
 });

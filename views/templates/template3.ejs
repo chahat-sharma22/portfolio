@@ -1,121 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= portfolio.name %> | Professional Portfolio</title>
+    <title><%= portfolio.name %> - Portfolio</title>
     <style>
         body {
-            font-family: '<%= styles.fontFamily %>', sans-serif;
-            font-size: <%= styles.fontSize %>;
-            color: <%= styles.textColor %>;
-            background-color: <%= styles.backgroundColor %>;
-            line-height: 1.6;
             margin: 0;
-            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #fdfdfd;
+            color: #333;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        header {
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(120deg, #6a11cb, #2575fc);
+            color: white;
             text-align: center;
-            margin-bottom: 3rem;
+            padding: 60px 20px;
         }
-        h1 {
-            font-size: 2.2rem;
-            color: <%= styles.headingColor %>;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
+        .hero img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+            margin-bottom: 15px;
         }
-        .subtitle {
-            font-size: 1.2rem;
-            color: <%= styles.accentColor %>;
-            margin-bottom: 1.5rem;
+        .hero h1 {
+            font-size: 2rem;
+            margin: 0;
         }
-        .divider {
-            height: 1px;
-            background: #eee;
-            margin: 2rem 0;
+        .hero p {
+            margin-top: 8px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Content Sections */
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px 20px;
         }
         section {
-            margin-bottom: 2.5rem;
+            margin-bottom: 50px;
         }
-        h2 {
-            font-size: 1.4rem;
-            color: <%= styles.headingColor %>;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        section h2 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            position: relative;
         }
-        .experience-item {
-            margin-bottom: 1.5rem;
+        section h2::after {
+            content: "";
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: #2575fc;
+            margin-top: 5px;
         }
-        .experience-item h3 {
+
+        /* Skills Tags */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .skill-tag {
+            background: #2575fc;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .project-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 15px;
+            transition: transform 0.2s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        .project-card h3 {
+            margin: 0;
             font-size: 1.1rem;
-            margin-bottom: 0.3rem;
+            color: #2575fc;
         }
-        .date {
-            font-style: italic;
-            color: #777;
-            margin-bottom: 0.5rem;
+        .project-card p {
+            font-size: 0.9rem;
+            color: #555;
         }
-        .skills-list {
-            columns: 2;
+
+        /* Lists for Education & Volunteering */
+        .list {
+            list-style: none;
+            padding: 0;
         }
-        @media (max-width: 600px) {
-            .skills-list { columns: 1; }
+        .list li {
+            margin-bottom: 12px;
+        }
+        .list strong {
+            color: #2575fc;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><%= portfolio.name %></h1>
-            <p class="subtitle"><%= portfolio.title %></p>
-            <p><%= portfolio.email %> | <%= portfolio.phone %> | <%= portfolio.location %></p>
-            <% if (portfolio.website) { %>
-                <p><a href="<%= portfolio.website %>" style="color: <%= styles.accentColor %>;"><%= portfolio.website %></a></p>
-            <% } %>
-        </header>
 
-        <div class="divider"></div>
-
-        <% if (portfolio.about) { %>
-            <section>
-                <h2>Profile</h2>
-                <p><%= portfolio.about %></p>
-            </section>
-            <div class="divider"></div>
+    <!-- Hero Section -->
+    <div class="hero">
+        <% if (portfolio.profilePic) { %>
+            <img src="<%= portfolio.profilePic %>" alt="<%= portfolio.name %>">
         <% } %>
-
-        <% if (portfolio.experience && portfolio.experience.length > 0) { %>
-            <section>
-                <h2>Professional Experience</h2>
-                <% portfolio.experience.forEach(exp => { %>
-                    <div class="experience-item">
-                        <h3><%= exp.position %></h3>
-                        <p class="date"><%= exp.company %> | <%= exp.startDate %> — <%= exp.endDate || 'Present' %></p>
-                        <% if (exp.description) { %>
-                            <p><%= exp.description %></p>
-                        <% } %>
-                    </div>
-                <% }); %>
-            </section>
-            <div class="divider"></div>
-        <% } %>
-
-        <% if (portfolio.skills && portfolio.skills.length > 0) { %>
-            <section>
-                <h2>Skills</h2>
-                <ul class="skills-list">
-                    <% portfolio.skills.forEach(skill => { %>
-                        <li><%= skill %></li>
-                    <% }); %>
-                </ul>
-            </section>
-        <% } %>
+        <h1><%= portfolio.name || "No Name" %></h1>
+        <p><%= portfolio.field || "Your Profession" %></p>
+        <p>Email: <%= portfolio.email || "" %> | Phone: <%= portfolio.phone || "" %></p>
+        <p>Verified: <%= portfolio.verify ? "✅" : "❌" %></p>
     </div>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Skills -->
+        <section>
+            <h2>Skills</h2>
+            <div class="skills">
+                <% if (portfolio.skills.length) { %>
+                    <% portfolio.skills.forEach(skill => { %>
+                        <div class="skill-tag"><%= skill.skill %> - <%= skill.proficiency %></div>
+                    <% }) %>
+                <% } else { %>
+                    <p>No skills listed</p>
+                <% } %>
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section>
+            <h2>Projects</h2>
+            <div class="projects-grid">
+                <% if (portfolio.projects.length) { %>
+                    <% portfolio.projects.forEach(proj => { %>
+                        <div class="project-card">
+                            <h3><%= proj.title || "No Title" %></h3>
+                            <p><%= proj.description || "" %></p>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>No projects listed</p>
+                <% } %>
+            </div>
+        </section>
+
+        <!-- Education -->
+        <section>
+            <h2>Education</h2>
+            <% if (portfolio.education.length) { %>
+                <ul class="list">
+                    <% portfolio.education.forEach(edu => { %>
+                        <li>
+                            <strong><%= edu.degree || "No Degree" %></strong> - <%= edu.institution || "No Institution" %>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No education listed</p>
+            <% } %>
+        </section>
+
+        <!-- Volunteering -->
+        <section>
+            <h2>Volunteering</h2>
+            <% if (portfolio.volunteering.length) { %>
+                <ul class="list">
+                    <% portfolio.volunteering.forEach(vol => { %>
+                        <li>
+                            <strong><%= vol.role || "No Role" %></strong> - <%= vol.organization || "No Organization" %>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No volunteering listed</p>
+            <% } %>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        © <%= new Date().getFullYear() %> <%= portfolio.name || "Portfolio Owner" %> — All rights reserved.
+    </footer>
+
 </body>
 </html>
